@@ -38,3 +38,41 @@ https://ufal.mff.cuni.cz/ufal-ukraine
      ```
 5. Install requirements - `make dep-install`
 6. We can use `python ukrainer.py` to extract those texts.`
+7. Install Hunalign - https://github.com/danielvarga/hunalign
+   - Commands:
+     ```
+     wget 'ftp://ftp.mokk.bme.hu/Hunglish/src/hunalign/latest/hunalign-1.1.tgz'
+     tar -xzf hunalign-1.1.tgz
+     cd hunalign-1.1/src/hunalign
+     make
+     ```
+8. Run alignemnt:
+   - Combine Sentences:
+     ```
+     find data/ukrainer-processed/ -name 'cs_sentences.txt' -exec cat {} \; > data/cs_sentences.txt
+     find data/ukrainer-processed/ -name 'ua_sentences.txt' -exec cat {} \; > data/ua_sentences.txt
+     ```
+   - Alignemnt:
+     ```
+     hunalign-1.1/src/hunalign/hunalign hunalign-1.1/data/null.dic data/cs_sentences.txt data/ua_sentences.txt -text > data/cs-ua-alignment.txt
+     ```
+
+### Helper Commands
+
+#### Figure out number of sentences
+
+Text content:
+
+```
+find data/ukrainer-processed/ -name 'cs_sentences.txt' -exec cat {} \; | wc
+  13670  259472 1915146
+find data/ukrainer-processed/ -name 'ua_sentences.txt' -exec cat {} \; | wc
+  13584  254286 3246207
+```
+
+#### Figure out number of aligned sentences
+
+```
+wc -l data/cs-ua-alignment.txt
+13476 data/cs-ua-alignment.txt
+```

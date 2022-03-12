@@ -135,3 +135,5 @@ dmypy.json
 # Project specific stuff
 lindat_translation_master.*
 lindat_translation_master/
+hunalign-1.1/
+hunalign-1.1.*
