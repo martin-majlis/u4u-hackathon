@@ -29,4 +29,12 @@ https://ufal.mff.cuni.cz/ufal-ukraine
      sleep 60; \
      done;
      ```
-4. We can use `python ukrainer.py` to extract those texts.
+4. Download Lindat Translation - https://github.com/ufal/lindat-translation
+   - Commands:
+     ```
+     wget https://github.com/ufal/lindat-translation/archive/refs/heads/master.zip -O lindat_translation_master.zip
+     unzip lindat_translation_master.zip
+     mv lindat-translation-master lindat_translation_master
+     ```
+5. Install requirements - `make dep-install`
+6. We can use `python ukrainer.py` to extract those texts.`

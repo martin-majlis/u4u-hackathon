@@ -131,3 +131,7 @@ dmypy.json
 
 # VSCode settings
 .vscode
+
+# Project specific stuff
+lindat_translation_master.*
+lindat_translation_master/
