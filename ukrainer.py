@@ -55,10 +55,12 @@ CS2UA: Dict[Path, Path] = defaultdict(Path)
 UA2CS: Dict[Path, Path] = defaultdict(Path)
 
 
-def combine_url(path: Path, rel: str) -> str:
+def combine_url(path: Path, href: str) -> str:
+    if href.startswith("https://"):
+        return href
     if "index.html" in str(path):
         path = path.parent
-    for p in rel.split("/"):
+    for p in href.split("/"):
         if p == "..":
             path = path.parent
         else:
@@ -144,6 +146,12 @@ def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
 
 def process_file(file: Path) -> bool:
     logger.info(f"{file} - processing")
+    if file.is_dir():
+        file /= "index.html"
+    if not file.exists():
+        logger.error(f"{file} does not exist!")
+        return False
+
     with open(file) as fh_file:
         soup = BeautifulSoup(fh_file.read(), "html.parser")
 
