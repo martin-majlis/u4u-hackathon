@@ -11,7 +11,7 @@ https://ufal.mff.cuni.cz/ufal-ukraine
 
 1. Download pages 3 level deep from the Czech version - https://ukrainer.net/cs/
    - Initial attempt - `wget --header='Accept-Language: cs' --execute="robots = off" -r -N -l 3 --no-remove-listing --convert-links --wait=1 -R png,jpg,jpeg,css,js,webp https://ukrainer.net/cs/`
-   - Try to start from themes and skip pages that has language suffix - `wget --header='Accept-Language: cs' --execute="robots = off" -r -N -l 4 --no-remove-listing --convert-links --wait=1 -R png,jpg,jpeg,css,js,webp,-de,-ja,-fr,-es https://ukrainer.net/temata/`
+   - Try to start from themes and skip pages that has language suffix - `wget --header='Accept-Language: cs' --execute="robots = off" -r -N -l 4 --no-remove-listing --convert-links --wait=1 -R png,jpg,jpeg,css,js,webp,-de,-ja,-fr,-es,feed,wp-json, https://ukrainer.net/temata/`
 2. Articles has drop downs with links to the articles in different languages.
    - `(cs) Čeština`
    - `(ua) Українська`
