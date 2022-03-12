@@ -10,6 +10,8 @@ from typing import Any, Dict, Optional, Tuple
 from bs4 import BeautifulSoup
 import requests
 
+from lindat_translation_master.app.text_utils import split_text_into_sentences
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 # create console handler and set level to debug
@@ -54,7 +56,6 @@ UA2CS: Dict[Path, Path] = defaultdict(Path)
 
 
 def combine_url(path: Path, rel: str) -> str:
-    logger.info([path, rel])
     if "index.html" in str(path):
         path = path.parent
     for p in rel.split("/"):
@@ -96,13 +97,20 @@ def download_pages(
     return cs_path, ua_path
 
 
+def splitter_lang(lang: str) -> str:
+    if lang == "ua":
+        return "uk"
+    return lang
+
+
 def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
     logger.info(f"Processing {html_file} for language {lang} into {output_path}")
     output_path.mkdir(parents=True, exist_ok=True)
-    output_file = output_path / f"{lang}.txt"
+    output_txt_file = output_path / f"{lang}.txt"
+    output_sententences_file = output_path / f"{lang}_sentences.txt"
     output_original_file = output_path / f"{lang}_orig.html"
-    if output_file.exists():
-        logger.warning(f"{html_file} - skipped, already processed - {output_file}")
+    if output_txt_file.exists():
+        logger.warning(f"{html_file} - skipped, already processed - {output_txt_file}")
         return False
 
     with open(html_file) as fh_file:
@@ -114,15 +122,21 @@ def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
                 for p in ps.contents:
                     texts.append(str(p))
 
-        with output_file.open(mode="w") as fh_out:
-            fh_out.write("\n".join(texts))
+        with output_txt_file.open(mode="w") as fh_txt_out:
+            fh_txt_out.write("\n".join(texts))
+
+        with output_sententences_file.open(mode="w") as fh_sent_out:
+            for txt in texts:
+                sentences = split_text_into_sentences(txt, splitter_lang(lang))
+                fh_sent_out.write("\n".join(sentences))
 
         shutil.copy(html_file, output_original_file)
 
         log_file = output_path / "_log.txt"
         with log_file.open(mode="w") as fh_log:
             fh_log.write(
-                f"{datetime.utcnow().isoformat()}\t{lang}\t{html_file}\t{output_file}"
+                f"{datetime.utcnow().isoformat()}\t{lang}\t"
+                f"{html_file}\t{output_txt_file}"
             )
 
     return True
