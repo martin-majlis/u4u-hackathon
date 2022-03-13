@@ -33,7 +33,7 @@ repos:
     rev: 5.8.0
     hooks:
       - id: isort
-        args: ["--profile", "google", "--filter-files"]
+        args: ["--profile", "black", "--filter-files"]
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.12.0

@@ -1,14 +1,14 @@
+import logging
+import shutil
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
-import logging
 from pathlib import Path
-import shutil
-import time
 from typing import Any, Dict, Optional, Tuple
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 from lindat_translation_master.app.text_utils import split_text_into_sentences
 
