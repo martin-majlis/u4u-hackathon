@@ -1,11 +1,10 @@
 import logging
 import shutil
 import time
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Iterator, Optional, Tuple
 
 import requests
 from bs4 import BeautifulSoup
@@ -49,10 +48,6 @@ def extract_info(el: Any) -> Optional[ExtractInfo]:
     return ExtractInfo(
         element=element, active=bool(element[0]["class"]), href=element[0]["href"]
     )
-
-
-CS2UA: Dict[Path, Path] = defaultdict(Path)
-UA2CS: Dict[Path, Path] = defaultdict(Path)
 
 
 def combine_url(path: Path, href: str) -> str:
@@ -112,6 +107,14 @@ def splitter_lang(lang: str) -> str:
     return lang
 
 
+def extract_texts(content: str) -> Iterator[str]:
+    soup = BeautifulSoup(content, "html.parser")
+
+    for txt_section in soup.find_all("div", class_="text-section"):
+        for p in txt_section.find_all("p"):
+            yield p.getText()
+
+
 def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
     logger.info(f"Processing {html_file} for language {lang} into {output_path}")
     output_path.mkdir(parents=True, exist_ok=True)
@@ -123,13 +126,7 @@ def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
         return False
 
     with open(html_file) as fh_file:
-        soup = BeautifulSoup(fh_file.read(), "html.parser")
-        texts = []
-
-        for txt_section in soup.find_all("div", class_="text-section"):
-            for ps in txt_section.find_all("p"):
-                for p in ps.contents:
-                    texts.append(str(p))
+        texts = extract_texts(fh_file.read())
 
         with output_txt_file.open(mode="w") as fh_txt_out:
             fh_txt_out.write("\n".join(texts))
@@ -173,8 +170,6 @@ def process_file(file: Path) -> bool:
             return False
 
         cs_html_path, ua_html_path = download_pages(file, cs_info, ua_info)
-        CS2UA[cs_html_path] = ua_html_path
-        UA2CS[ua_html_path] = cs_html_path
 
         output_dir = DIR_PROCESSED / cs_html_path.name
         cs_processed = extract_file(cs_html_path, output_dir, "cs")

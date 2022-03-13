@@ -4,3 +4,4 @@ mypy==0.812
 pre-commit
 pytest
 pytest-cov
+types-beautifulsoup4
