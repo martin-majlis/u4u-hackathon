@@ -17,17 +17,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          aptitude install wget
           python -m pip install --upgrade pip
           make dep-install
       - name: Install pre-commit hooks
         run: |
           make pre-commit-install
-      - name: "Add Lindat"
-        run: |
-          wget https://github.com/ufal/lindat-translation/archive/refs/heads/master.zip -O lindat_translation_master.zip
-          unzip lindat_translation_master.zip
-          mv lindat-translation-master lindat_translation_master
       - name: Run pre-commit
         run: |
           make pre-commit-all
