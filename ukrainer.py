@@ -56,6 +56,13 @@ UA2CS: Dict[Path, Path] = defaultdict(Path)
 
 
 def combine_url(path: Path, href: str) -> str:
+    """
+    Combines path to the file with the URL found in href attribute
+    >>> combine_url(Path("foo/bar/index.html"), "https://ukrainer.net/")
+    'https://ukrainer.net/'
+    >>> combine_url(Path("foo/bar/index.html"), "baz")
+    'foo/bar/baz'
+    """
     if href.startswith("https://"):
         return href
     if "index.html" in str(path):

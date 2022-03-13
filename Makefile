@@ -1,6 +1,6 @@
 OPEN=xdg-open
 
-PROJECT_DIR=proj
+PROJECT_DIR=.
 TEST_DIR=tests
 
 checks: mypy test
@@ -11,7 +11,11 @@ mypy:
 test: test-ci
 
 test-ci:
-	pytest --cov=$(PROJECT_DIR) -v
+	pytest \
+		--cov=$(PROJECT_DIR) \
+		-v \
+		--ignore lindat_translation_master \
+		--ignore hunalign-1.1
 
 coverage:
 	coverage html -d coverage_html
