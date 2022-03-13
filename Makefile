@@ -20,7 +20,7 @@ coverage:
 test-and-coverage: test coverage
 
 pre-commit-all:
-	pre-commit run -a -v
+	pre-commit run -a -v || git diff
 
 pre-commit-install:
 	pre-commit install
