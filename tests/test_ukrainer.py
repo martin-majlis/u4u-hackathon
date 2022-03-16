@@ -12,7 +12,7 @@ from ukrainer import extract_texts
             <p>A</p>
         </div>
         <div class="text-section">
-            <h1>C</h1>
+            <b>C</b>
             <p>D</p>
         </div>
         """,
@@ -42,6 +42,18 @@ from ukrainer import extract_texts
         """,
             ["A A A", "B"],
             id="content with tags",
+        ),
+        pytest.param(
+            """
+        <div class="text-section">
+            <h1>H1</h1>
+            <p>P1</p>
+            <h2>H2</h2>
+            <p>P2</p>
+        </div>
+        """,
+            ["H1", "H2", "P1", "P2"],
+            id="content with headers",
         ),
     ],
 )

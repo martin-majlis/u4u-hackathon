@@ -111,6 +111,10 @@ def extract_texts(content: str) -> Iterator[str]:
     soup = BeautifulSoup(content, "html.parser")
 
     for txt_section in soup.find_all("div", class_="text-section"):
+        # TODO: We can remove <div class="authors"> if we do not want them
+        for i in range(1, 6):
+            for h in txt_section.find_all(f"h{i}"):
+                yield h.getText()
         for p in txt_section.find_all("p"):
             yield p.getText()
 
@@ -126,7 +130,7 @@ def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
         return False
 
     with open(html_file) as fh_file:
-        texts = extract_texts(fh_file.read())
+        texts = list(extract_texts(fh_file.read()))
 
         with output_txt_file.open(mode="w") as fh_txt_out:
             fh_txt_out.write("\n".join(texts))
@@ -134,7 +138,7 @@ def extract_file(html_file: Path, output_path: Path, lang: str) -> bool:
         with output_sententences_file.open(mode="w") as fh_sent_out:
             for txt in texts:
                 sentences = split_text_into_sentences(txt, splitter_lang(lang))
-                fh_sent_out.write("\n".join(sentences))
+                fh_sent_out.write("\n".join(sentences) + "\n")
 
         shutil.copy(html_file, output_original_file)
 

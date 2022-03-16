@@ -50,3 +50,17 @@ external-install:
 		unzip lindat_translation_master.zip; \
 		mv lindat-translation-master lindat_translation_master; \
 	fi;
+
+run-extract-ukrainer:
+	python ukrainer.py
+
+combine-sentences:
+	find data/ukrainer-processed/ -name 'cs_sentences.txt' -exec cat {} \; > data/cs_sentences.txt
+	find data/ukrainer-processed/ -name 'ua_sentences.txt' -exec cat {} \; > data/ua_sentences.txt
+
+run-hunalign:
+	hunalign-1.1/src/hunalign/hunalign hunalign-1.1/data/null.dic data/cs_sentences.txt data/ua_sentences.txt -text > data/cs-ua-hunaligned_sentences.txt
+
+
+stats-sentences-extracted:
+	wc data/*_sentences.txt
